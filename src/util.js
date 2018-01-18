@@ -1,9 +1,9 @@
 const order = ['决策', '创造', '亲和', '行动']
-const order_reached = [false, false, false, false]
 const weight = [0.85, 0.6, 0.35, 0.2]
-const weight_reached = [false, false, false, false]
 
 export function scoreHandler(card, priority) {
+  const order_reached = [false, false, false, false]
+  const weight_reached = [false, false, false, false]
   let score = 0;
   priority.forEach((item, index) => {
     if(item !== null) {
