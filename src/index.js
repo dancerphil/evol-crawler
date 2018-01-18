@@ -2,21 +2,40 @@ import React from "react";
 import { render } from "react-dom";
 import ReactTable from "react-table";
 import "react-table/react-table.css";
-import data from './card_records.json'
+import PrioritySelect from './PrioritySelect'
+import cards from './card_records.json'
+import {scoreHandler} from './util'
 
-const length = data.length
+const length = cards.length
 
 class App extends React.Component {
   constructor() {
     super();
     this.state = {
-      data
+      cards,
+      priority: [null, null, null, null]
     };
+    this.handleSelect = (index) => (e) => {
+      if (e.target.value === '') {
+        this.state.priority[index] = null
+      } else {
+        this.state.priority[index] = e.target.value
+      }
+      this.forceUpdate()
+    }
   }
   render() {
-    const { data } = this.state;
+    const { cards, priority } = this.state;
+    const data = cards.map(card => scoreHandler(card, priority))
     return (
       <div>
+        <div>
+          调整分数权重
+          <PrioritySelect index={0} handleSelect={this.handleSelect} />
+          <PrioritySelect index={1} handleSelect={this.handleSelect} />
+          <PrioritySelect index={2} handleSelect={this.handleSelect} />
+          <PrioritySelect index={3} handleSelect={this.handleSelect} />
+        </div>
         <ReactTable
           data={data}
           columns={[
@@ -47,6 +66,10 @@ class App extends React.Component {
             {
               Header: "行动",
               accessor: "行动"
+            },
+            {
+              Header: "分数",
+              accessor: "分数"
             },
           ]}
           defaultPageSize={length}
