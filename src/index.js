@@ -5,6 +5,7 @@ import "react-table/react-table.css";
 import PrioritySelect from './PrioritySelect'
 import cards from './card_records.json'
 import {scoreHandler} from './util'
+import './index.css'
 
 const length = cards.length
 
@@ -37,14 +38,20 @@ class App extends React.Component {
     }
     data = data.map(card => scoreHandler(card, priority))
     return (
-      <div>
-        <div style={{display: 'flex', alignItems: 'center'}}>
+      <div style={{ width: 1000, marginLeft: 'calc(50vw - 500px)', textAlign: 'right' }}>
+        <div style={{ position: 'relative', marginTop: 5 }}>
+          <span style={{ right: 0, color: '#d0d0d0' }}>
+            作者已经加入 <a href="https://weibo.com/u/6329420338" style={{ color: '#d0d0d0' }}>Link 攻略组</a>，敬请期待
+          </span>
+        </div>
+        <div style={{ position: 'relative', display: 'flex', alignItems: 'center', marginTop: 8, marginBottom: 10 }}>
           <input type="checkbox" onClick={this.handleCheck}/>
           调整分数权重
           <PrioritySelect index={0} handleSelect={this.handleSelect} />
           <PrioritySelect index={1} handleSelect={this.handleSelect} />
           <PrioritySelect index={2} handleSelect={this.handleSelect} />
           <PrioritySelect index={3} handleSelect={this.handleSelect} />
+          <a href="https://github.com/dancerphil/evol-crawler" style={{ position: 'absolute', right: 0, color: '#d0d0d0' }}>GPL3.0 By 张振衣</a>
         </div>
         <ReactTable
           data={data}
