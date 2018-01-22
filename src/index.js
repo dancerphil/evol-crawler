@@ -13,7 +13,8 @@ class App extends React.Component {
     super();
     this.state = {
       cards,
-      priority: [null, null, null, null]
+      priority: [null, null, null, null],
+      checked: false
     };
     this.handleSelect = (index) => (e) => {
       if (e.target.value === '') {
@@ -23,13 +24,22 @@ class App extends React.Component {
       }
       this.forceUpdate()
     }
+    this.handleCheck = () => {
+      const { checked } = this.state
+      this.setState({ checked: !checked })
+    }
   }
   render() {
-    const { cards, priority } = this.state;
-    const data = cards.map(card => scoreHandler(card, priority))
+    const { cards, priority, checked } = this.state
+    let data = cards
+    if (checked) {
+      data = data.filter(card => card.star)
+    }
+    data = data.map(card => scoreHandler(card, priority))
     return (
       <div>
-        <div>
+        <div style={{display: 'flex', alignItems: 'center'}}>
+          <input type="checkbox" onClick={this.handleCheck}/>
           调整分数权重
           <PrioritySelect index={0} handleSelect={this.handleSelect} />
           <PrioritySelect index={1} handleSelect={this.handleSelect} />
@@ -39,6 +49,12 @@ class App extends React.Component {
         <ReactTable
           data={data}
           columns={[
+            {
+              Header: '',
+              id: '-',
+              accessor: i => i.star ? '*' : '-',
+              width: 30
+            },
             {
               Header: "角色",
               accessor: "角色"
@@ -74,6 +90,18 @@ class App extends React.Component {
           ]}
           defaultPageSize={length}
           className="-striped -highlight"
+          getTdProps={(state, rowInfo) => {
+            return {
+              onClick: (e, handleOriginal) => {
+                const row = rowInfo.original;
+                row.star = !row.star;
+                this.forceUpdate()
+                if (handleOriginal) {
+                  handleOriginal()
+                }
+              }
+            }
+          }}
         />
       </div>
     );
